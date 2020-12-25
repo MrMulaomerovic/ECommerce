@@ -20,6 +20,7 @@ mongoose.Promise = global.Promise;
 mongoose
   .connect(dbConfig.url, {
     useNewUrlParser: true,
+    useUnifiedTopology: true,
   })
   .then(() => {
     console.log("Successfully connected to the database");
@@ -34,17 +35,15 @@ app.get("/", (req, res) => {
   res.json({ mesage: "Welcome to ECommerce application." });
 });
 
-//Require products routes
-require("./app/routes/ecommerce.routes.js")(app);
+const productRoute = require("./app/routes/productsRoute");
+const customerRoute = require("./app/routes/customerRoute");
+const orderRoute = require("./app/routes/orderRoute");
+const shipmentRoute = require("./app/routes/shipmentRoute");
 
-//Require customer routes
-require("./app/customers/ecommerce.routes.js")(app);
-
-//Require products routes
-require("./app/orders/ecommerce.routes.js")(app);
-
-//Require products routes
-require("./app/shipment/ecommerce.routes.js")(app);
+app.use("/products", productRoute);
+app.use("/customers", customerRoute);
+app.use("/orders", orderRoute);
+app.use("/shipments", shipmentRoute);
 
 //listen for request
 app.listen(3000, () => {
